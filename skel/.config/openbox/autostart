@@ -1,0 +1,32 @@
+# compton
+compton -b --config $HOME/.config/compton.conf &
+
+# laptops without a numpad may want to comment this out
+numlockx &
+
+pactl set-sink-mute @DEFAULT_SINK@ false &
+
+# panel
+(sleep 1; $HOME/.config/polybar/launch-ob-polybar.sh) &
+
+# meta key opens rofi
+ksuperkey -e 'Super_L=Alt_L|F1' &
+
+# wallpaper
+(sleep 1; nitrogen --restore) &
+
+# xfce settings
+xfsettingsd &
+
+
+#(sleep 3; thunar --daemon) &
+(sleep 1; xdg-user-dirs-gtk-update) &
+
+# only used if system tray enabled
+#(sleep 2; volumeicon) &
+#(sleep 2; nm-applet) &
+
+# skippy
+(sleep 2; skippy-xd --config $HOME/.config/skippy-xd/skippy-xd.rc --start-daemon) &
+(sleep 5; termite --geometry=650x450 --exec=/usr/bin/al-hello) &
+(sleep 5; $HOME/.config/first-start.sh) &

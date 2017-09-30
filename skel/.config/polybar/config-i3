@@ -1,0 +1,384 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;  Fonts you may want if changing the font         ;;;;;;;;
+;;;;;;;;      --- ttf-font-awesome                        ;;;;;;;;
+;;;;;;;;      --- ttf-material-icons                      ;;;;;;;;
+;;;;;;;;      --- nerd-fonts-complete                     ;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;             Colours
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+[colors]
+background = #71131313
+foreground = #EFF0F1
+urgent     = #E64141
+blue       = #1793D1
+b-alt      = #00131313
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;            Bars
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+[settings]
+throttle-output = 5
+throttle-output-for = 10
+throttle-input-for = 30
+compositing-background = over
+compositing-foreground = over
+compositing-overline = over
+compositing-underline = over
+compositing-border = over
+screenchange-reload = true
+
+
+[bar/bar1]
+; Use  xrandr -q | grep " connected" | cut -d ' ' -f1
+; for a list of connected monitors
+monitor =
+monitor-strict = false
+override-redirect = false
+width = 100%
+height = 24
+fixed-center = true
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+font-0 = Ubuntu Nerd Font:size=13;2
+font-1 = FontAwesome:pixelsize=12;2
+font-2 = MaterialIcons:size=12;2
+font-3 = Fira Sans:size=12:weight=regular;2
+
+modules-left = workspaces-icon menu
+modules-center = window_count
+modules-right = pkg battery network volume clock
+
+module-margin = 0
+padding-right = 0
+padding-left = 0
+bottom = false
+underline-size = 2
+
+;tray-position = center
+;tray-padding = 10
+;tray-background = ${colors.background}
+;tray-offset-x = 10%
+;tray-offset-y = 0
+
+click-right = pavucontrol &
+click-left = python /usr/bin/networkmanager_dmenu
+click-middle = skippy-xd --activate-window-picker
+scroll-up = $HOME/.config/polybar/scripts/pavolume.sh --up
+scroll-down = $HOME/.config/polybar/scripts/pavolume.sh --down
+double-click-left = python /usr/bin/networkmanager_dmenu
+double-click-middle = skippy-xd --activate-window-picker
+double-click-right = pavucontrol &
+
+
+
+
+[bar/bar2]
+monitor =
+monitor-strict = false
+override-redirect = false
+width = 100%
+height = 24
+fixed-center = true
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+font-0 = Ubuntu Nerd Font:size=13;2
+font-1 = FontAwesome:pixelsize=12;2
+font-2 = MaterialIcons:size=12;2
+font-3 = Fira Sans:size=12:weight=regular;2
+
+modules-left = workspaces-icon
+modules-center = window_count
+modules-right = filesystem trash
+
+module-margin = 0
+padding-right = 0
+padding-left = 0
+bottom = false
+underline-size = 2
+
+click-right = pavucontrol &
+click-left = python /usr/bin/networkmanager_dmenu
+click-middle = skippy-xd --activate-window-picker
+scroll-up = $HOME/.config/polybar/scripts/pavolume.sh --up
+scroll-down = $HOME/.config/polybar/scripts/pavolume.sh --down
+double-click-left = python /usr/bin/networkmanager_dmenu
+double-click-middle = skippy-xd --activate-window-picker
+double-click-right = pavucontrol &
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;              Modules
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+[module/pkg]
+type = custom/script
+label-foreground = ${colors.foreground}
+label-background = ${colors.b-alt}
+exec = $HOME/.config/polybar/scripts/pkg.sh
+exec-if = "ping -c 1 8.8.8.8 > /dev/null"
+click-left = termite --exec=pacli &
+click-right = termite --exec=pacli &
+label-padding = 2
+interval = 1500
+
+
+[module/network]
+type = custom/script
+label-background = ${colors.b-alt}
+exec = $HOME/.config/polybar/scripts/network.sh
+click-left = python /usr/bin/networkmanager_dmenu
+click-right = python /usr/bin/networkmanager_dmenu
+label-padding = 2
+interval = 2
+tail = true
+
+
+[module/window_count]
+type = custom/script
+interval = 2
+label = "%{A1:skippy-xd --activate-window-picker:}   %output%  %{A}"
+label-background = ${colors.b-alt}
+exec = echo "$(wmctrl -l -i | wc -l)"
+format = <label>
+format-prefix = "   "
+format-prefix-foreground = ${colors.foreground}
+format-prefix-background = ${colors.b-alt}
+format-padding = 0
+
+
+[module/clock]
+type = internal/date
+format = <label>
+label-padding-right = 4
+format-prefix = 
+format-background = ${colors.b-alt}
+format-foreground = ${colors.foreground}
+interval = 2
+time = %R
+label = %{A1:gsimplecal & disown:} %{A3:gsimplecal & disown:} %time% %{A}%{A}
+
+
+[module/volume]
+type = internal/volume
+master-mixer = Master
+label-volume-padding-right = 4
+format-volume =  <ramp-volume> <label-volume>
+label-muted = "     muted    "
+label-muted-foreground = #66
+label-muted-background = ${colors.b-alt}
+format-volume-background = ${colors.b-alt}
+ramp-volume-0 = "   "
+
+
+
+; i3 specific
+
+
+[module/menu]
+type = custom/menu
+format-spacing = 1
+format-background = ${colors.b-alt}
+label-open = "   "
+label-open-foreground = ${colors.foreground}
+label-open-background = ${colors.b-alt}
+label-close = "    "
+label-close-foreground = ${colors.urgent}
+label-separator = " | "
+label-separator-foreground = ${colors.foreground}
+# Top level
+menu-0-0 = "  "
+menu-0-0-exec = menu-open-1
+menu-0-1 = "    |"
+menu-0-1-exec = menu-open-2
+# 1
+menu-1-0 = "  "
+menu-1-0-exec = exo-open --launch WebBrowser
+menu-1-1 = "  "
+menu-1-1-exec = exo-open --launch TerminalEmulator
+menu-1-2 = "    |"
+menu-1-2-exec = exo-open --launch FileManager
+# 2
+menu-2-0 = "  "
+menu-2-0-exec = menu-open-0
+menu-2-1 = "   "
+menu-2-1-exec = openbox --exit
+menu-2-2 = "   "
+menu-2-2-exec = systemctl reboot
+menu-2-3 = "      |"
+menu-2-3-exec = systemctl poweroff
+
+
+
+[module/workspace-icon]
+type = internal/i3
+pin-workspaces = true
+strip-wsnumbers = true
+index-sort = true
+enable-click = true
+enable-scroll = false
+wrapping-scroll = false
+reverse-scroll = false
+fuzzy-match = true
+ws-icon-0 = 1;
+ws-icon-1 = 2;
+ws-icon-2 = 3;
+ws-icon-3 = 4;
+ws-icon-4 = 5;
+ws-icon-5 = 6;
+ws-icon-6 = 7;
+ws-icon-7 = 8;
+ws-icon-8 = 9;
+ws-icon-9 = 10;
+ws-icon-default = 
+format = <label-state><label-mode>
+label-mode = %mode%
+label-mode-padding = 4
+label-mode-background = ${colors.b-alt}
+label-mode-underline = ${colors.urgent}
+label-focused = %icon%
+label-focused-background = ${colors.b-alt}
+label-focused-underline = ${colors.blue}
+label-focused-padding = 4
+label-unfocused = %icon%
+label-unfocused-padding = 4
+label-unfocused-background = ${colors.b-alt}
+label-visible = %icon%
+label-visible-underline = ${colors.blue}
+label-visible-background = ${colors.b-alt}
+label-visible-padding = 4
+label-urgent = %icon%
+label-urgent-background = ${colors.b-alt}
+label-urgent-underline = ${colors.urgent}
+label-urgent-padding = 4
+
+
+
+
+
+
+
+; Extra modules
+
+
+
+[module/battery]
+type = internal/battery
+full-at = 98
+
+; Use the following command to list batteries and adapters:
+; $ ls -1 /sys/class/power_supply/
+battery = BAT1
+adapter = ACAD
+
+poll-interval = 5
+time-format = %H:%M
+format-charging = <animation-charging><label-charging>
+format-discharging = <ramp-capacity><label-discharging>
+format-full = <ramp-capacity>
+format-padding = 0
+label-charging = "  %percentage%%  "
+label-charging-background = ${colors.b-alt}
+label-discharging = " %percentage%%  "
+label-discharging-background = ${colors.b-alt}
+format-charging-background = ${colors.b-alt}
+format-discharging-background = ${colors.b-alt}
+format-full-background = ${colors.b-alt}
+ramp-capacity-0 = "    "
+ramp-capacity-1 = "    "
+ramp-capacity-2 = "    "
+ramp-capacity-3 = "    "
+ramp-capacity-4 = "    "
+ramp-capacity-background = ${colors.b-alt}
+bar-capacity-width = 10
+animation-charging-0 = " "
+animation-charging-1 = " "
+animation-charging-2 = " "
+animation-charging-3 = " "
+animation-charging-4 = " "
+animation-charging-framerate = 750
+animation-charging-background = ${colors.b-alt}
+
+
+
+[module/trash]
+interval = 3
+type = custom/script
+exec = $HOME/.config/polybar/scripts/trash
+format-prefix = "  "
+format-prefix-foreground = ${colors.foreground}
+format-prefix-background = ${colors.b-alt}
+format-background = ${colors.b-alt}
+click-right = rm -rf $HOME/.local/share/Trash/files/*
+click-left = exo-open --launch FileManager $HOME/.local/share/Trash/files
+
+
+[module/filesystem]
+type = internal/fs
+interval = 25
+mount-0 = /
+label-mounted =  %mountpoint%:%percentage_used%%
+label-mounted-foreground = ${colors.foreground}
+label-mounted-background = ${colors.b-alt}
+label-unmounted = %mountpoint% not mounted
+label-unmounted-foreground = ${colors.blue}
+label-unmounted-background = ${colors.b-alt}
+
+
+[module/compton]
+type = custom/script
+label-background = ${colors.b-alt}
+exec = $HOME/.config/polybar/scripts/compton.sh
+click-left = $HOME/.config/polybar/scripts/compton-toggle.sh
+click-right = $HOME/.config/polybar/scripts/compton-toggle.sh
+interval = 2
+label-padding = 1
+
+
+[module/rofi]
+type = custom/script
+exec = echo "    "
+click-left = rofi-apps
+label-foreground = ${colors.foreground}
+label-background = ${colors.b-alt}
+
+
+[module/temp]
+type = internal/temperature
+interval = 3
+thermal-zone = 0
+warn-temp = 70
+format = <label>
+format-padding = 0
+label-foreground = ${colors.foreground}
+label-background = ${colors.b-alt}
+label-warn-foreground = ${colors.urgent}
+label = "    %temperature% "
+label-warn = "    %temperature% "
+
+
+[module/memory]
+type = internal/memory
+interval = 3
+format = <label>
+format-prefix = "    "
+format-prefix-foreground = ${colors.foreground}
+format-prefix-background = ${colors.b-alt}
+label = %{A1:termite --exec=htop & disown:}%percentage_used%%%{A}
+label-background = ${colors.b-alt}
+
+
+[module/cpu]
+type = internal/cpu
+interval = 3
+format-prefix = "    "
+format-prefix-foreground = ${colors.foreground}
+format-prefix-background = ${colors.b-alt}
+label = %{A1:termite --exec=htop & disown:}%percentage%%%{A}
+label-background = ${colors.b-alt}
